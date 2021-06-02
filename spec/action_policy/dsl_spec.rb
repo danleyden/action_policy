@@ -4,6 +4,8 @@ require "spec_helper"
 require "action_policy/rspec/dsl"
 
 class UserPolicy < ActionPolicy::Base
+  alias_rule :use_alias?, to: :show?
+
   scope_for :data do |users, with_admins: false|
     next users if user.admin? || with_admins
     users.reject(&:admin?)
@@ -73,5 +75,9 @@ describe UserPolicy, type: :policy do
         let(:user) { admin }
       end
     end
+  end
+
+  describe_rule :use_alias? do
+    succeed
   end
 end
